@@ -18,10 +18,12 @@ import com.example.brandproductcrud.dto.ProductResponseDTO;
 import com.example.brandproductcrud.entity.Product;
 import com.example.brandproductcrud.service.ProductService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
+@SecurityRequirement(name = "bearerAuth")
 public class productController {
 
 	@Autowired

@@ -1,5 +1,6 @@
 package com.example.brandproductcrud.configer;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,12 @@ import com.example.brandproductcrud.filter.JwtAuthenticationFilter;
 @Configuration
 public class SecurityConfiger {
 	
+	@Value("${app.user.password}")
+	private String userPassword;
+
+	@Value("${app.admin.password}")
+	private String adminPassword;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -27,15 +34,20 @@ public class SecurityConfiger {
 	 
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder){
-		UserDetails user = User.builder().username("Adarsh").password(passwordEncoder.encode("adarsh@@")).roles("USER").build();
+		UserDetails user = User.builder().username("Adarsh").password(passwordEncoder.encode("userPassword")).roles("USER").build();
 		
-		UserDetails admin = User.builder().username("admin").password(passwordEncoder.encode("admin123")).roles("ADMIN").build();
+		UserDetails admin = User.builder().username("admin").password(passwordEncoder.encode("adminPassword")).roles("ADMIN").build();
 		return new InMemoryUserDetailsManager(user,admin);
 	}
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth 
+				 .requestMatchers(
+			                "/swagger-ui/**",
+			                "/swagger-ui.html",
+			                "/v3/api-docs/**"
+			        ).permitAll()
 				.requestMatchers("/auth/login").permitAll()
 				.requestMatchers(HttpMethod.GET,"/products/**")
 				.hasAnyRole("USER","ADMIN")
