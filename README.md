@@ -51,8 +51,8 @@ Swagger UI is available when the application is running:
 
 ```text
 http://localhost:8080/swagger-ui/index.html
+```
 
-```text
 Swagger is used to view and test the API endpoints.
 
 ### Swagger UI
