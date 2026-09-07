@@ -42,13 +42,13 @@ public class SecurityConfiger {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
-		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth 
-				 .requestMatchers(
-			                "/swagger-ui/**",
-			                "/swagger-ui.html",
-			                "/v3/api-docs/**"
+		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
+			    .requestMatchers(
+			            "/auth/login",
+			            "/swagger-ui/**",
+			            "/swagger-ui.html",
+			            "/v3/api-docs/**"
 			        ).permitAll()
-				.requestMatchers("/auth/login").permitAll()
 				.requestMatchers(HttpMethod.GET,"/products/**")
 				.hasAnyRole("USER","ADMIN")
 				
@@ -67,12 +67,6 @@ public class SecurityConfiger {
         session.sessionCreationPolicy(
             org.springframework.security.config.http.SessionCreationPolicy.STATELESS
         )
-    )
-
-   
-    .addFilterBefore(
-        jwtAuthenticationFilter,
-        UsernamePasswordAuthenticationFilter.class
     );
 
 return http.build();
